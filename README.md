@@ -2,6 +2,24 @@
 
 A cutting-edge **RAG (Retrieval-Augmented Generation)** application built with Next.js 14 that enables users to upload PDF documents and engage in intelligent conversations with their content using advanced AI technologies.
 
+## OUTPUT:
+
+# Signup/login:
+<img width="1061" height="741" alt="image" src="https://github.com/user-attachments/assets/c2002946-ac50-4cb8-8acf-b2822fa79ff0" />
+
+# Upload File:
+<img width="1902" height="865" alt="image" src="https://github.com/user-attachments/assets/4e866c62-3230-447a-a30f-7a7683743aed" />
+
+# Multiple PDF query:
+<img width="1589" height="867" alt="image" src="https://github.com/user-attachments/assets/ee73dc09-990c-4c1e-84de-a482f14d926c" />
+
+
+# History of chat:
+<img width="1895" height="861" alt="image" src="https://github.com/user-attachments/assets/667924b7-90dc-400c-8713-a9eb5ff65bb1" />
+
+## DataBase file:
+<img width="1899" height="811" alt="image" src="https://github.com/user-attachments/assets/44fcb616-b66a-4a93-8110-d4749ae76f78" />
+
 <img width="1696" height="670" alt="image" src="https://github.com/user-attachments/assets/f65f3429-2098-4d18-a39f-e37ebd242008" />
 
 
