@@ -164,6 +164,12 @@ pdf-qa-app/
 - **Groq API** key (free tier available)
 - **HuggingFace** account (optional, for better embeddings)
 
+- 
+docker run -d \
+  -p 8000:8000 \
+  -e CHROMA_SERVER_CORS_ALLOW_ORIGINS="*" \
+  chromadb/chroma
+
 ### Step 1: Project Setup
 ```bash
 # Create new Next.js project
