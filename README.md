@@ -2,7 +2,8 @@
 
 A cutting-edge **RAG (Retrieval-Augmented Generation)** application built with Next.js 14 that enables users to upload PDF documents and engage in intelligent conversations with their content using advanced AI technologies.
 
-![Application Preview](https://via.placeholder.com/800x400/1e293b/ffffff?text=PDF+Q%26A+Assistant+Preview)
+<img width="1696" height="670" alt="image" src="https://github.com/user-attachments/assets/f65f3429-2098-4d18-a39f-e37ebd242008" />
+
 
 ## 🌟 Features Overview
 
