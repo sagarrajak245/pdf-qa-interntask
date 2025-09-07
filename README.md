@@ -183,10 +183,6 @@ pdf-qa-app/
 - **HuggingFace** account (optional, for better embeddings)
 
 - 
-docker run -d \
-  -p 8000:8000 \
-  -e CHROMA_SERVER_CORS_ALLOW_ORIGINS="*" \
-  chromadb/chroma
 
 ### Step 1: Project Setup
 ```bash
@@ -205,6 +201,12 @@ npm install pdf-parse chromadb @huggingface/inference groq-sdk
 
 # UI and styling
 npm install react-hot-toast lucide-react class-variance-authority clsx tailwind-merge
+
+# Docker to run chromaDb:
+docker run -d \
+  -p 8000:8000 \
+  -e CHROMA_SERVER_CORS_ALLOW_ORIGINS="*" \
+  chromadb/chroma
 
 # Setup Shadcn UI
 npx shadcn-ui@latest init
