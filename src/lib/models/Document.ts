@@ -20,7 +20,8 @@ const documentSchema = new mongoose.Schema({
     },
     vectorStoreId: {
         type: String,
-        required: true,
+        required: false,
+
     },
     chunksCount: {
         type: Number,

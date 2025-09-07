@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate file type
         if (file.type !== 'application/pdf') {
             return NextResponse.json(
                 { error: 'Only PDF files are allowed' },
@@ -37,7 +36,6 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Validate file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
             return NextResponse.json(
                 { error: 'File size must be less than 10MB' },
@@ -45,39 +43,35 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Convert file to buffer
         const buffer = Buffer.from(await file.arrayBuffer());
 
-        // Create document record
         const document = await Document.create({
             userId,
             filename: `${userId}_${Date.now()}_${file.name}`,
             originalName: file.name,
             fileSize: file.size,
-            vectorStoreId: '', // Will be updated after processing
+            vectorStoreId: null,
             chunksCount: 0,
             status: 'processing',
         });
 
         try {
-            // Process PDF
             const processor = new PDFProcessor();
             const processed = await processor.processPDF(buffer);
-
-            // Create vector store collection
             const collectionName = `doc_${document._id}`;
 
+            // ========================= FIX IS HERE =========================
             await vectorStore.createCollection(
                 collectionName,
                 processed.chunks,
                 processed.chunks.map((chunk, index) => ({
                     documentId: document._id.toString(),
                     chunkIndex: index,
-                    pageInfo: processed.metadata,
+                    ...processed.metadata, // Use spread syntax to flatten the object
                 }))
             );
+            // ===============================================================
 
-            // Update document record
             await Document.findByIdAndUpdate(document._id, {
                 vectorStoreId: collectionName,
                 chunksCount: processed.chunks.length,
@@ -94,11 +88,9 @@ export async function POST(request: NextRequest) {
                 },
             });
         } catch (processingError) {
-            // Update document status to error
             await Document.findByIdAndUpdate(document._id, {
                 status: 'error',
             });
-
             throw processingError;
         }
     } catch (error) {
@@ -135,4 +127,4 @@ export async function GET(request: NextRequest) {
             { status: 500 }
         );
     }
-}  
+}

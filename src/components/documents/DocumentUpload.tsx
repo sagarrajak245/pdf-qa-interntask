@@ -1,4 +1,6 @@
-'use client';
+// src/components/documents/DocumentUpload.tsx
+
+'use client'; 
 
 import { Card, CardContent } from '@/components/ui/card';
 import { useDocuments } from '@/hooks/useDocuments';
@@ -12,6 +14,7 @@ export function DocumentUpload() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { uploadDocument } = useDocuments();
 
+  // --- REVISED FUNCTION ---
   const handleFiles = async (files: FileList) => {
     const validFiles = Array.from(files).filter(file => {
       if (file.type !== 'application/pdf') {
@@ -29,17 +32,25 @@ export function DocumentUpload() {
 
     setUploading(true);
 
-    for (const file of validFiles) {
-      try {
-        await uploadDocument(file);
-        toast.success(`${file.name} uploaded successfully`);
-      } catch (error) {
-        toast.error(`Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    }
+    // Create an array of upload promises
+    const uploadPromises = validFiles.map(file => 
+      uploadDocument(file)
+        .then(() => toast.success(`${file.name} uploaded successfully`))
+        .catch(error => toast.error(`Failed to upload ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`))
+    );
 
-    setUploading(false);
+    try {
+      // Wait for all uploads to complete in parallel
+      await Promise.all(uploadPromises);
+    } finally {
+      // Reset the input so the same file can be uploaded again
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+      setUploading(false);
+    }
   };
+  // --- END REVISED FUNCTION ---
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
