@@ -264,9 +264,9 @@ export function ChatInterface({
                     <Button
                         type="submit"
                         disabled={!input.trim() || isLoading || selectedDocuments.length === 0}
-                        className="px-3"
+                        className="px-3 mt-1"
                     >
-                        <Send className="h-4 w-4" />
+                        <Send className="h-4 w-4 mt-1" />
                     </Button>
                 </form>
             </div>

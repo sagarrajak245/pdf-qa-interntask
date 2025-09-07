@@ -110,7 +110,7 @@ export function DocumentList({ selectedDocuments, onDocumentSelect }: DocumentLi
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1 pl-1">
                     <div className="flex items-center space-x-1">
                       {getStatusIcon(doc.status)}
                       <span className="text-xs">{getStatusText(doc.status)}</span>

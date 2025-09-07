@@ -21,9 +21,10 @@ export class GroqService {
       
 Guidelines:
 - Answer questions based ONLY on the provided context
+- If descriptive questions like explain , Teach me ,Summarize then expalin in deatail manner.
 - If the answer is not in the context, say "I don't have enough information in the provided documents to answer this question."
 - Be concise but comprehensive
-- If referencing specific information, mention it's from the documents
+- If referencing specific information, mention it's from the documents 
 - Maintain a helpful and professional tone
 
 Context from documents:
