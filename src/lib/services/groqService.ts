@@ -37,7 +37,7 @@ ${context}`;
 
             const completion = await groq.chat.completions.create({
                 messages,
-                model: 'llama3-8b-8192', // Fast and efficient model
+                model: 'llama-3.3-70b-versatile',
                 temperature: 0.1,
                 max_tokens: 1024,
                 top_p: 1,
@@ -64,7 +64,7 @@ ${context}`;
                         content: firstMessage
                     }
                 ],
-                model: 'llama3-8b-8192',
+                model: 'llama-3.3-70b-versatile',
                 temperature: 0.3,
                 max_tokens: 50,
             });
