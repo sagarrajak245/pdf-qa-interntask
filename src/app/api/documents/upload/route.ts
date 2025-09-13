@@ -44,6 +44,10 @@ export async function POST(request: NextRequest) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
+        console.log("File name:", file.name);
+        console.log("File type:", file.type);
+        console.log("File size:", file.size);
+        console.log("Buffer length:", buffer.length);
 
         const document = await Document.create({
             userId,
