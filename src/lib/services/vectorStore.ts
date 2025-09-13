@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // src/lib/services/vectorStore.ts
 import { InferenceClient } from '@huggingface/inference';
@@ -13,7 +13,7 @@ type DocumentMetadata = {
     [key: string]: any; // Allows for other properties from pdfProcessor metadata
 };
 
-// Define the exact vector type that Upstash expects
+// Define the exact vector type that Upstash expects 
 type UpstashVector = {
     id: string;
     vector: number[];
