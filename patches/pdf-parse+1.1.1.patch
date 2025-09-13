@@ -1,14 +1,23 @@
 diff --git a/node_modules/pdf-parse/index.js b/node_modules/pdf-parse/index.js
-index e9fc367..93b372a 100644
+index e9fc367..e9de955 100644
 --- a/node_modules/pdf-parse/index.js
 +++ b/node_modules/pdf-parse/index.js
-@@ -9,18 +9,18 @@ let isDebugMode = !module.parent;
+@@ -1,26 +1,22 @@
+ const Fs = require('fs');
+ const Pdf = require('./lib/pdf-parse.js');
+-
+ module.exports = Pdf;
  
+-let isDebugMode = !module.parent; 
+-
++// Completely disable debug mode to prevent any issues
++let isDebugMode = false; // Changed from !module.parent to false
+ //process.env.AUTO_KENT_DEBUG
  
+-
  //for testing purpose
 -if (isDebugMode) {
-+// if (isDebugMode) {  
- 
+-
 -    let PDF_FILE = './test/data/05-versions-space.pdf';
 -    let dataBuffer = Fs.readFileSync(PDF_FILE);
 -    Pdf(dataBuffer).then(function(data) {
@@ -20,8 +29,11 @@ index e9fc367..93b372a 100644
 -    }).catch(function(err) {
 -        debugger;
 -    });
+-
+-}
++// if (isDebugMode) {
 +//     let PDF_FILE = './test/data/05-versions-space.pdf';
-+//     let dataBuffer = Fs.readFileSync(PDF_FILE);
++//     let dataBuffer = Fs.readFileSync(PDF_FILE);    
 +//     Pdf(dataBuffer).then(function(data) {
 +//         Fs.writeFileSync(`${PDF_FILE}.txt`, data.text, {
 +//             encoding: 'utf8',
@@ -31,6 +43,5 @@ index e9fc367..93b372a 100644
 +//     }).catch(function(err) {
 +//         debugger;
 +//     });
- 
--}
 +// }
+\ No newline at end of file
