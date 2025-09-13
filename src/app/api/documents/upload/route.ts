@@ -1,4 +1,6 @@
 // app/api/documents/upload/route.ts
+
+export const runtime = "nodejs";
 import { getUserFromRequest } from '@/lib/auth';
 import { Document } from '@/lib/models/Document';
 import connectDB from '@/lib/mongodb';
@@ -44,6 +46,9 @@ export async function POST(request: NextRequest) {
         }
 
         const buffer = Buffer.from(await file.arrayBuffer());
+        if (!buffer || buffer.length === 0) {
+            return NextResponse.json({ error: 'Empty PDF buffer' }, { status: 400 });
+        }
         console.log("File name:", file.name);
         console.log("File type:", file.type);
         console.log("File size:", file.size);
