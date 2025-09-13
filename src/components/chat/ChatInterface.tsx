@@ -34,7 +34,9 @@ export function ChatInterface({
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
     };
 
     useEffect(() => {
@@ -151,125 +153,143 @@ export function ChatInterface({
     };
 
     return (
-        <div className="flex flex-col h-full">
-            {/* Chat Header */}
-            <div className="flex items-center justify-between p-4 border-b">
-                <div>
-                    <h3 className="font-semibold">Chat</h3>
-                    <p className="text-sm text-gray-500">
-                        {selectedDocuments.length} document{selectedDocuments.length !== 1 ? 's' : ''} selected
-                    </p>
+        <div className="h-full w-full flex flex-col bg-white dark:bg-gray-800">
+            {/* Fixed Chat Header */}
+            <div className="flex-shrink-0 border-b bg-white dark:bg-gray-900">
+                <div className="p-4">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="font-semibold text-gray-900 dark:text-white">Chat</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {selectedDocuments.length} document{selectedDocuments.length !== 1 ? 's' : ''} selected
+                            </p>
+                        </div>
+                        {messages.length > 0 && sessionId && (
+                            <div className="flex space-x-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => exportChat('text')}
+                                >
+                                    <Download className="h-4 w-4 mr-1" />
+                                    TXT
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => exportChat('json')}
+                                >
+                                    <Download className="h-4 w-4 mr-1" />
+                                    JSON
+                                </Button>
+                            </div>
+                        )}
+                    </div>
                 </div>
-                {messages.length > 0 && sessionId && (
-                    <div className="flex space-x-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => exportChat('text')}
-                        >
-                            <Download className="h-4 w-4 mr-1" />
-                            TXT
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => exportChat('json')}
-                        >
-                            <Download className="h-4 w-4 mr-1" />
-                            JSON
-                        </Button>
-                    </div>
-                )}
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {messages.length === 0 ? (
-                    <div className="text-center text-gray-500 mt-8">
-                        <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>Start a conversation about your documents</p>
-                        <p className="text-sm mt-1">Ask questions and I will help you find answers!</p>
-                    </div>
-                ) : (
-                    messages.map((message, index) => (
-                        <div key={index} className="flex space-x-3">
-                            <div className={`
-                flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                ${message.role === 'user'
-                                    ? 'bg-blue-100 dark:bg-blue-900'
-                                    : 'bg-gray-100 dark:bg-gray-800'
-                                }
-              `}>
-                                {message.role === 'user' ? (
-                                    <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                                ) : (
-                                    <Bot className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                                )}
-                            </div>
-                            <div className="flex-1">
-                                <div className={`
-                  p-3 rounded-lg max-w-3xl
-                  ${message.role === 'user'
-                                        ? 'bg-blue-500 text-white ml-auto'
-                                        : 'bg-white dark:bg-gray-800 border'
-                                    }
-                `}>
-                                    <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+            {/* Messages Container */}
+            <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-800">
+                <div className="h-full overflow-y-auto">
+                    <div className="p-4">
+                        {messages.length === 0 ? (
+                            <div className="h-full flex items-center justify-center min-h-[400px]">
+                                <div className="text-center text-gray-500 dark:text-gray-400">
+                                    <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                                    <p className="text-lg mb-2">Start a conversation about your documents</p>
+                                    <p className="text-sm">Ask questions and I will help you find answers!</p>
                                 </div>
-                                <p className="text-xs text-gray-400 mt-1">
-                                    {message.timestamp.toLocaleTimeString()}
-                                </p>
                             </div>
-                        </div>
-                    ))
-                )}
+                        ) : (
+                            <div className="space-y-6 pb-4">
+                                {messages.map((message, index) => (
+                                    <div key={`${message.role}-${index}-${message.timestamp.getTime()}`} className="flex space-x-4">
+                                        <div className={`
+                                            flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
+                                            ${message.role === 'user'
+                                                ? 'bg-blue-100 dark:bg-blue-900'
+                                                : 'bg-gray-200 dark:bg-gray-700'
+                                            }
+                                        `}>
+                                            {message.role === 'user' ? (
+                                                <User className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                                            ) : (
+                                                <Bot className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                            )}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className={`
+                                                rounded-lg p-4 max-w-none
+                                                ${message.role === 'user'
+                                                    ? 'bg-blue-500 text-white'
+                                                    : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100'
+                                                }
+                                            `}>
+                                                <div className="prose prose-sm max-w-none">
+                                                    <p className="whitespace-pre-wrap break-words m-0">{message.content}</p>
+                                                </div>
+                                            </div>
+                                            <p className="text-xs text-gray-400 mt-2 ml-1">
+                                                {message.timestamp.toLocaleTimeString()}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
 
-                {isLoading && (
-                    <div className="flex space-x-3">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-                            <Bot className="h-4 w-4 text-gray-600 dark:text-gray-300" />
-                        </div>
-                        <div className="bg-white dark:bg-gray-800 border rounded-lg p-3">
-                            <div className="flex space-x-1">
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                {isLoading && (
+                                    <div className="flex space-x-4">
+                                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                            <Bot className="h-4 w-4 text-gray-600 dark:text-gray-300" />
+                                        </div>
+                                        <div className="flex-1">
+                                            <div className="bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg p-4">
+                                                <div className="flex space-x-2">
+                                                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                                                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div ref={messagesEndRef} className="h-4" />
                             </div>
-                        </div>
+                        )}
                     </div>
-                )}
-
-                <div ref={messagesEndRef} />
+                </div>
             </div>
 
-            {/* Input Form */}
-            <div className="p-4 border-t">
-                <form onSubmit={handleSubmit} className="flex space-x-2">
-                    <div className="flex-1">
-                        <Textarea
-                            ref={textareaRef}
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder={
-                                selectedDocuments.length === 0
-                                    ? "Select documents first..."
-                                    : "Ask a question about your documents..."
-                            }
-                            disabled={isLoading || selectedDocuments.length === 0}
-                            className="min-h-[44px] max-h-32 resize-none"
-                            rows={1}
-                        />
-                    </div>
-                    <Button
-                        type="submit"
-                        disabled={!input.trim() || isLoading || selectedDocuments.length === 0}
-                        className="px-3 mt-1"
-                    >
-                        <Send className="h-4 w-4 mt-1" />
-                    </Button>
-                </form>
+            {/* Fixed Input Form */}
+            <div className="flex-shrink-0 border-t bg-white dark:bg-gray-900">
+                <div className="p-4">
+                    <form onSubmit={handleSubmit} className="flex gap-3">
+                        <div className="flex-1">
+                            <Textarea
+                                ref={textareaRef}
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder={
+                                    selectedDocuments.length === 0
+                                        ? "Select documents first..."
+                                        : "Ask a question about your documents..."
+                                }
+                                disabled={isLoading || selectedDocuments.length === 0}
+                                className="min-h-[48px] max-h-32 resize-none"
+                                rows={1}
+                            />
+                        </div>
+                        <Button
+                            type="submit"
+                            disabled={!input.trim() || isLoading || selectedDocuments.length === 0}
+                            className="h-12 px-4 self-end"
+                        >
+                            <Send className="h-4 w-4" />
+                        </Button>
+                    </form>
+                </div>
             </div>
         </div>
     );
-}
+}      

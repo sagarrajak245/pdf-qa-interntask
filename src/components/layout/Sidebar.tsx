@@ -15,12 +15,13 @@ export function Sidebar({ children, className }: SidebarProps) {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-gray-900 border-r transition-all duration-300",
+        "bg-white dark:bg-gray-900 border-r transition-all duration-300 flex flex-col",
         collapsed ? "w-16" : "w-80",
         className
       )}
     >
-      <div className="p-4 border-b">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 p-4 border-b">
         <div className="flex items-center justify-between">
           {!collapsed && (
             <h2 className="text-lg font-semibold">Navigation</h2>
@@ -40,8 +41,18 @@ export function Sidebar({ children, className }: SidebarProps) {
         </div>
       </div>
 
-      <div className={cn("p-4", collapsed && "px-2")}>
-        {children}
+      {/* Scrollable Content */}
+      <div className={cn(
+        "flex-1 overflow-hidden flex flex-col",
+        collapsed ? "px-2 py-4" : "p-4"
+      )}>
+        {!collapsed ? children : (
+          <div className="flex flex-col items-center space-y-2">
+            <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+            <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+          </div>
+        )}
       </div>
     </div>
   );
