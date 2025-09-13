@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "node -e \"try { const fs = require('fs'); const path = './node_modules/pdf-parse/index.js'; if (fs.existsSync(path)) { let content = fs.readFileSync(path, 'utf8'); content = content.replace('let isDebugMode = !module.parent;', 'let isDebugMode = false;'); fs.writeFileSync(path, content); console.log('pdf-parse patched'); } } catch (e) { console.log('patch failed, continuing...'); }\""
+    "postinstall": "node -e \"const fs = require('fs'); const path = './node_modules/pdf-parse/index.js'; if (fs.existsSync(path)) { let content = fs.readFileSync(path, 'utf8'); content = content.replace('let isDebugMode = !module.parent;', 'let isDebugMode = false;'); content = content.replace(/if \\(isDebugMode\\)\\s*\\{[\\s\\S]*?\\}/, ''); fs.writeFileSync(path, content); console.log('pdf-parse debug code removed successfully'); }\""
   },
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.8",
