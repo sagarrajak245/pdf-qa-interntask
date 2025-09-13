@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "patch-package"
+    "postinstall": "node -e \"try { const fs = require('fs'); const path = './node_modules/pdf-parse/index.js'; if (fs.existsSync(path)) { let content = fs.readFileSync(path, 'utf8'); if (!content.includes('isDebugMode = false')) { content = content.replace('let isDebugMode = !module.parent;', 'let isDebugMode = false;').replace(/if \\(isDebugMode\\) \\{[\\s\\S]*?\\n\\}/g, '// Debug code disabled'); fs.writeFileSync(path, content); console.log('pdf-parse patched successfully'); } else { console.log('pdf-parse already patched'); } } } catch (e) { console.log('pdf-parse patch failed, but continuing...'); }\""
   },
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.8",
@@ -50,7 +50,6 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
-    "patch-package": "^8.0.0",
     "tailwindcss": "^4.1.13",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
