@@ -1,5 +1,5 @@
 // lib/services/pdfProcessor.ts
-import pdf from 'pdf-parse';
+// Vercel-safe version without pdf-parse dependency
 
 export interface ProcessedDocument {
     chunks: string[];
@@ -20,13 +20,55 @@ export class PDFProcessor {
     }
 
     async processPDF(buffer: Buffer): Promise<ProcessedDocument> {
+        // Try pdf-parse only if we're not in a serverless environment
+        if (this.canUsePdfParse()) {
+            try {
+                const pdfParseResult = await this.tryPdfParse(buffer);
+                if (pdfParseResult) {
+                    console.log('Successfully processed with pdf-parse');
+                    return pdfParseResult;
+                }
+            } catch (error) {
+                console.error('pdf-parse failed:', error);
+            }
+        }
+
+        // Use raw extraction (always works)
+        console.log('Using raw PDF extraction...');
+        return this.rawPDFExtraction(buffer);
+    }
+
+    /**
+     * Check if we can safely use pdf-parse
+     */
+    private canUsePdfParse(): boolean {
+        // Detect if we're in a serverless environment
+        const isServerless = process.env.VERCEL ||
+            process.env.LAMBDA_TASK_ROOT ||
+            process.env.AWS_LAMBDA_FUNCTION_NAME ||
+            process.env.FUNCTIONS_WORKER_RUNTIME;
+
+        return !isServerless;
+    }
+
+    /**
+     * Safely try to use pdf-parse library
+     */
+    private async tryPdfParse(buffer: Buffer): Promise<ProcessedDocument | null> {
         try {
-            // Try primary method with pdf-parse
-            const data = await pdf(buffer);
+            // Dynamic import to avoid import-time errors
+            const pdfParse = await import('pdf-parse');
+            const pdf = pdfParse.default || pdfParse;
+
+            const data = await pdf(buffer, {
+                // Minimal options to avoid file system access
+                max: 0,
+            });
+
             const text = data.text;
 
             if (!text || text.trim().length === 0) {
-                throw new Error('No text content found in PDF');
+                return null;
             }
 
             // Split text into chunks
@@ -41,10 +83,8 @@ export class PDFProcessor {
                 },
             };
         } catch (error) {
-            console.error('pdf-parse failed, attempting raw extraction:', error);
-
-            // Fallback to raw extraction - no external libraries
-            return this.rawPDFExtraction(buffer);
+            console.error('pdf-parse method failed:', error);
+            return null;
         }
     }
 
@@ -351,4 +391,4 @@ export class PDFProcessor {
 
         return sentences;
     }
-}
+}  
