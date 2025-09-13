@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@chroma-core/default-embed": "^0.1.8",
@@ -49,6 +50,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
+    "patch-package": "^8.0.0",
     "tailwindcss": "^4.1.13",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
